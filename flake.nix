@@ -1,49 +1,57 @@
-# flake.nix
 {
-    description = "Custom Neovim Build from Specific Commit";
+  description = "Custom Neovim Build from Specific Commit";
 
-    inputs = {
-        nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable"; # Using nixpkgs unstable
-        flake-utils.url = "github:numtide/flake-utils";
-    };
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
 
-    outputs = { self, nixpkgs, flake-utils, ... }:
-        flake-utils.lib.eachDefaultSystem (system:
-            let
-                # Define an overlay to override neovim-unwrapped
-                overlay = final: prev: {
-                    neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (oldAttrs: {
-                        pname = "neovim";
-                        version = "v0.11.0-dev"; # Optional: update version for clarity
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        overlay = final: prev: {
+          neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (oldAttrs: {
+            pname = "neovim";
+            version = "v0.11.0-dev";
 
-                        src = prev.fetchgit {
-                            url = "https://github.com/neovim/neovim.git";
-                            rev = "7c00e0efbb18e8627ac59eaadf564a9f1b2bafcd"; # Your commit hash
-                            sha256 = "1iara2vms36w1wnvfd9d4hfzmf4dax5qpsk7p6k8dd2imblmqf5k"; # Correct sha256
-                        };
+            src = prev.fetchgit {
+              url = "https://github.com/neovim/neovim.git";
+              rev = "e71d2c817d1a2475551f58a98e411f6b39a5be3f";
+              sha256 = "0wzhs3i0kyrnl7k5y8kfhnhb1vyskwrax6ry5frk2zlpj8qivbhd";
+            };
 
-                        buildInputs = oldAttrs.buildInputs ++ [ final.utf8proc ];
+            buildInputs = oldAttrs.buildInputs ++ [ final.utf8proc ];
 
-                        installCheckPhase = "";
-                    });
-                };
+            patches = [
+              ./reuse_win-focus.patch
+            ];
 
-                # Import nixpkgs with the overlay
-                pkgs = import nixpkgs {
-                    inherit system;
-                    overlays = [ overlay ];
-                };
-            in {
-                packages = {
-                    neovim = pkgs.neovim;
-                };
+            installCheckPhase = "";
+          });
+        };
 
-                # Optionally, define an app for easier access
-                apps = {
-                    neovim = flake-utils.lib.mkApp {
-                        drv = self.packages.${system}.neovim;
-                    };
-                };
-            }
-        );
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ overlay ];
+        };
+      in
+      {
+        packages = {
+          neovim = pkgs.neovim;
+        };
+
+        apps = {
+          neovim = flake-utils.lib.mkApp {
+            drv = self.packages.${system}.neovim;
+          };
+        };
+      }
+    );
 }

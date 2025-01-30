@@ -1,0 +1,32 @@
+From 3db41e0631f9e0495240a6ab89d4738affb03869 Mon Sep 17 00:00:00 2001
+From: Martin Lasson <larssonmartin1998-mac@Martins-MacBook-Pro.local>
+Date: Thu, 30 Jan 2025 20:07:29 +0100
+Subject: [PATCH] type(lsp): Fix so vim.lsp.LocationOpts.reuse_win focuses the
+ reused window.
+
+    Problem:
+    When using the { reuse_win = true, }, the reused window is not focused.
+
+    Solution:
+    use vim.api.nvim_set_current_win to change the focus to the window that
+    we're reusing if it only has a single result. This is useful when paired
+    with diagnostic or declaration.
+---
+ runtime/lua/vim/lsp/buf.lua | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/runtime/lua/vim/lsp/buf.lua b/runtime/lua/vim/lsp/buf.lua
+index 48aa809ebd..8b3f3080cd 100644
+--- a/runtime/lua/vim/lsp/buf.lua
++++ b/runtime/lua/vim/lsp/buf.lua
+@@ -215,6 +215,7 @@ local function get_locations(method, opts)
+         local w = opts.reuse_win and vim.fn.win_findbuf(b)[1] or win
+         api.nvim_win_set_buf(w, b)
+         api.nvim_win_set_cursor(w, { item.lnum, item.col - 1 })
++        api.nvim_set_current_win(w)
+         vim._with({ win = w }, function()
+           -- Open folds under the cursor
+           vim.cmd('normal! zv')
+-- 
+2.47.0
+
