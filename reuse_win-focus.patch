@@ -1,8 +1,8 @@
-From 3db41e0631f9e0495240a6ab89d4738affb03869 Mon Sep 17 00:00:00 2001
+From 46e9cf19ff975c6ba2de35b3f924c61d8da0d79e Mon Sep 17 00:00:00 2001
 From: Martin Lasson <larssonmartin1998-mac@Martins-MacBook-Pro.local>
-Date: Thu, 30 Jan 2025 20:07:29 +0100
-Subject: [PATCH] type(lsp): Fix so vim.lsp.LocationOpts.reuse_win focuses the
- reused window.
+Date: Thu, 30 Jan 2025 20:45:09 +0100
+Subject: [PATCH] type(lsp): Fix so vim.lsp.LocationOpts.reuse_win also focuses
+ the reused     window.
 
     Problem:
     When using the { reuse_win = true, }, the reused window is not focused.
@@ -16,7 +16,7 @@ Subject: [PATCH] type(lsp): Fix so vim.lsp.LocationOpts.reuse_win focuses the
  1 file changed, 1 insertion(+)
 
 diff --git a/runtime/lua/vim/lsp/buf.lua b/runtime/lua/vim/lsp/buf.lua
-index 48aa809ebd..8b3f3080cd 100644
+index 69407bc6f8..3f077f640f 100644
 --- a/runtime/lua/vim/lsp/buf.lua
 +++ b/runtime/lua/vim/lsp/buf.lua
 @@ -215,6 +215,7 @@ local function get_locations(method, opts)
