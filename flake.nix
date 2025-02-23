@@ -23,8 +23,8 @@
 
             src = prev.fetchgit {
               url = "https://github.com/neovim/neovim.git";
-              rev = "7c00e0efbb18e8627ac59eaadf564a9f1b2bafcd";
-              sha256 = "1iara2vms36w1wnvfd9d4hfzmf4dax5qpsk7p6k8dd2imblmqf5k";
+              rev = "b288fa8d62c3f129d333d3ea6abc3234039cad37";
+              sha256 = "ta3rq+pr6YxLvSiU4ydDvq79z1w+L0Ozmq0b9Cv5sn8=";
             };
 
             buildInputs = oldAttrs.buildInputs ++ [ final.utf8proc ];
