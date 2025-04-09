@@ -19,12 +19,12 @@
         overlay = final: prev: {
           neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (oldAttrs: {
             pname = "neovim";
-            version = "v0.11.0-dev";
+            version = "v0.11.1-dev";
 
             src = prev.fetchgit {
               url = "https://github.com/neovim/neovim.git";
-              rev = "7c00e0efbb18e8627ac59eaadf564a9f1b2bafcd";
-              sha256 = "1iara2vms36w1wnvfd9d4hfzmf4dax5qpsk7p6k8dd2imblmqf5k";
+              rev = "b5158e8e92fbb8206c620961b5b330b90b34429b";
+              sha256 = "0xwiddwqhpmc032fybszgsgm34pbfm26l86pz8kikvxvsh6a9wsn";
             };
 
             buildInputs = oldAttrs.buildInputs ++ [ final.utf8proc ];
